@@ -52,8 +52,8 @@ public class FileProcessor extends Thread {
     public void run() {
 
         // Close all open windows
-        closeAllWindow();
-        WindowManager.closeAllWindows();
+        /*closeAllWindow();
+        WindowManager.closeAllWindows();*/
 
         // Prepare results folder
         prepareOutputFolder();
@@ -81,6 +81,12 @@ public class FileProcessor extends Thread {
         if (mAnalyseSettings.mSelectedFunction.equals(AnalyseSettings.Function.calcColoc)) {
             pipeline = new ExosomColoc(mAnalyseSettings,  mAnalyseSettings.ch0.type, mAnalyseSettings.ch1.type);
         }
+
+        if (mAnalyseSettings.mSelectedFunction.equals(AnalyseSettings.Function.cellFinder)) {
+            pipeline = new CellFinder(mAnalyseSettings,  mAnalyseSettings.ch0.type, mAnalyseSettings.ch1.type);
+        }
+
+
         if (null == pipeline) {
             mDialog.finishedAnalyse("");
             return;
@@ -156,8 +162,8 @@ public class FileProcessor extends Thread {
                 ey.printStackTrace();
             }
 
-            closeAllWindow();
-            WindowManager.closeAllWindows();
+            //closeAllWindow();
+            //WindowManager.closeAllWindows();
             mDialog.incrementProgressBarValue("analyzing ...");
             if (true == mStopping) {
                 break;

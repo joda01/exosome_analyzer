@@ -609,7 +609,7 @@ public class EvColocDialog extends JFrame {
         this.add(l, c);
 
         AnalyseSettings.Function[] functions = { AnalyseSettings.Function.noSelection,
-                AnalyseSettings.Function.calcColoc, AnalyseSettings.Function.countExosomes };
+                AnalyseSettings.Function.calcColoc, AnalyseSettings.Function.countExosomes, AnalyseSettings.Function.cellFinder };
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.weightx = 1;

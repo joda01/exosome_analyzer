@@ -179,6 +179,18 @@ public class Filter {
         return cpy;
     }
 
+    public static Vector<Pair<Integer,Integer>> FindMaxima(ImagePlus image){
+        IJ.run(image, "Find Maxima...", "prominence=200 exclude light output=List");
+        
+        File original = new File("tempfileOriginal.csv");
+        IJ.saveAs("Results", original.getAbsolutePath());
+
+        Vector<Pair<Integer,Integer>> reult = getCoordinatesFromMaxima(original);
+
+        original.delete();
+        return reult; 
+    }
+
     public static Channel MeasureImage(int chNr, String channelName, AnalyseSettings settings, ImagePlus imageOrigial,
             ImagePlus imageThershold, RoiManager rm) {
         // https://imagej.nih.gov/ij/developer/api/ij/plugin/frame/RoiManager.html
@@ -210,6 +222,45 @@ public class Filter {
         IJ.saveAs("Results", resultFileName.getAbsolutePath());
         IJ.run("Clear Results", "");
     }
+
+
+    private static Vector<Pair<Integer,Integer>> getCoordinatesFromMaxima(File originalFile) {
+        Vector<Pair<Integer,Integer>> resut = new Vector<>();
+        try {
+
+            String[] readLinesOriginal = new String(
+                    Files.readAllBytes(Paths.get(originalFile.getAbsoluteFile().toString())), StandardCharsets.UTF_8)
+                            .split("\n");
+
+            // First line is header therefore start with 1
+            for (int i = 1; i < readLinesOriginal.length; i++) {
+
+                String[] lineOriginal = readLinesOriginal[i].split(",");
+
+                int x = 0;
+
+                try {
+                    x = Integer.parseInt(lineOriginal[1]);
+                } catch (NumberFormatException ex) {
+                }
+
+                int y = 0;
+                try {
+                    y = Integer.parseInt(lineOriginal[2]);
+                } catch (NumberFormatException ex) {
+                }
+                resut.add(new Pair(x,y));
+               
+            }
+
+        } catch (IOException ex) {
+            IJ.log("No File: " + ex.getMessage());
+        }
+
+        return resut;
+    }
+
+
 
     private static Channel createChannelFromMeasurement(int chNr, String channelName, AnalyseSettings settings,
             File originalFile, File thesholdFile) {
